@@ -266,24 +266,24 @@ function Dashboard() {
               placeholder="Search..."
               value={globalSearch}
               onChange={(e) => setGlobalSearch(e.target.value)}
-              className="pl-10 pr-3 py-1.5 rounded-full border border-gray-300 w-72 text-sm"
+              className="pl-10 pr-3 py-1.5 rounded-lg border border-gray-300 w-72 text-sm"
             />
           </div>
           <div className="flex items-center gap-3">
             <button 
-              className="bg-white px-3 py-1.5 rounded-full border border-gray-300 text-sm hover:bg-gray-50"
+              className="bg-white px-4 py-2 rounded-lg shadow border border-gray-300"
               onClick={() => setShowPatientModal(true)}
             >
               Add Patient
             </button>
             <button 
-              className="bg-white px-3 py-1.5 rounded-full border border-gray-300 text-sm hover:bg-gray-50"
+              className="bg-white px-4 py-2 rounded-lg shadow border border-gray-300"
               onClick={() => setShowBookingModal(true)}
             >
               New Booking
             </button>
             <button 
-              className="bg-white px-3 py-1.5 rounded-full border border-gray-300 text-sm hover:bg-gray-50"
+              className="bg-white px-4 py-2 rounded-lg shadow border border-gray-300"
               onClick={() => setShowCheckInModal(true)}
             >
               Check In
@@ -434,7 +434,7 @@ function Dashboard() {
           <div 
             ref={patientModalRef}
             className="bg-white rounded-lg w-80 p-4 relative"
-            style={{ maxHeight: '80vh', overflowY: 'auto' }}
+            style={{ maxHeight: '80vh'}}
           >
             <h2 className="text-lg font-bold mb-4 text-center">Patient Details</h2>
             
@@ -550,7 +550,7 @@ function Dashboard() {
               <div className="flex justify-center pt-3">
                 <button
                   onClick={handleAddPatient}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-1 px-8 rounded-full border border-gray-300 text-sm"
+                  className="bg-teal-600 text-white px-6 py-2 rounded-lg"
                 >
                   ADD
                 </button>
@@ -686,7 +686,7 @@ function Dashboard() {
               <div className="flex justify-center pt-3">
                 <button
                   onClick={handleAddBooking}
-                  className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-1 px-8 rounded-full border border-gray-300 text-sm"
+                  className="bg-teal-600 text-white px-6 py-2 rounded-lg"
                 >
                   ADD
                 </button>
