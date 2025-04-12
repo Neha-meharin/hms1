@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calendar, Search, User } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
@@ -153,284 +152,113 @@ const DoctorManagement = () => {
       {/* Edit Schedule Modal - Improved to match design */}
       {showEditSchedule && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <div className="bg-white p-6 shadow-lg w-[800px] h-[700px] 
-        overflow-y-auto scrollbar-none ">
-          <h2 className="text-xl font-bold mb-4 text-center">Edit Schedule</h2>
-    
-          <div className="mb-4">
-            <label className="block mb-1">Select Doctor:</label>
-            <select
-              className="border p-2 rounded-lg w-full"
-              value={selectedDoctor ? selectedDoctor.id : ""}
-              onChange={(e) => {
-                const doctorId = parseInt(e.target.value, 10);
-                const doctor = doctors.find((doc) => doc.id === doctorId);
-                setSelectedDoctor(doctor);
-              }}
-            >
-              <option value="" disabled>
-                Select a doctor
-              </option>
-              {doctors.map((doctor) => (
-                <option key={doctor.id} value={doctor.id}>
-                  {doctor.name}
+          <div className="bg-white p-6 shadow-lg w-[500px] max-h-screen overflow-hidden flex flex-col rounded-lg">
+            <h2 className="text-xl font-bold mb-4 text-center">Edit Schedule</h2>
+
+            <div className="mb-4">
+              <label className="block mb-1">Select Doctor:</label>
+              <select
+                className="border p-2 rounded-lg w-full"
+                value={selectedDoctor ? selectedDoctor.id : ""}
+                onChange={(e) => {
+                  const doctorId = parseInt(e.target.value, 10);
+                  const doctor = doctors.find((doc) => doc.id === doctorId);
+                  setSelectedDoctor(doctor);
+                }}
+              >
+                <option value="" disabled>
+                  Select a doctor
                 </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex gap-4 mb-4">
-        <div>
-          <label className="block mb-1">From:</label>
-          <DatePicker
-            selected={scheduleData.fromDate ? new Date(scheduleData.fromDate) : null}
-            onChange={(date) =>
-              setScheduleData({ ...scheduleData, fromDate: date })
-            }
-            className="border p-2 rounded-lg w-full"
-            placeholderText="Select Date"
-            dateFormat="dd/MM/yyyy"
-          />
-        </div>
-        <div>
-          <label className="block mb-1">To:</label>
-          <DatePicker
-            selected={scheduleData.toDate ? new Date(scheduleData.toDate) : null}
-            onChange={(date) =>
-              setScheduleData({ ...scheduleData, toDate: date })
-            }
-            className="border p-2 rounded-lg w-full"
-            placeholderText="Select Date"
-            dateFormat="dd/MM/yyyy"
-          />
-        </div>
-      </div>
-           
-            
+                {doctors.map((doctor) => (
+                  <option key={doctor.id} value={doctor.id}>
+                    {doctor.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex gap-4 mb-4">
+              <div>
+                <label className="block mb-1">From:</label>
+                <DatePicker
+                  selected={scheduleData.fromDate ? new Date(scheduleData.fromDate) : null}
+                  onChange={(date) =>
+                    setScheduleData({ ...scheduleData, fromDate: date })
+                  }
+                  className="border p-2 rounded-lg w-full"
+                  placeholderText="Select Date"
+                  dateFormat="dd/MM/yyyy"
+                />
+              </div>
+              <div>
+                <label className="block mb-1">To:</label>
+                <DatePicker
+                  selected={scheduleData.toDate ? new Date(scheduleData.toDate) : null}
+                  onChange={(date) =>
+                    setScheduleData({ ...scheduleData, toDate: date })
+                  }
+                  className="border p-2 rounded-lg w-full"
+                  placeholderText="Select Date"
+                  dateFormat="dd/MM/yyyy"
+                />
+              </div>
+            </div>
+
             <div className="mb-4 flex items-center">
-              <label className="mr-2">Availability :</label>
-              <button 
+              <label className="mr-2">Availability:</label>
+              <button
                 className={`w-12 h-6 rounded-full relative ${availability ? 'bg-teal-500' : 'bg-gray-300'}`}
                 onClick={() => setAvailability(!availability)}
               >
-                <div 
+                <div
                   className={`w-4 h-4 bg-white rounded-full absolute top-1 transform transition-transform ${availability ? 'translate-x-7' : 'translate-x-1'}`}
                 ></div>
               </button>
             </div>
-            
-            <div className="mb-4">
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="sun" 
-                  className="mr-2"
-                  checked={scheduleData.days.Sun.selected}
-                  onChange={() => handleDayCheckChange("Sun")}
-                />
-                <label className="mr-2 w-8" htmlFor="sun">Sun</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none" 
-                    value={scheduleData.days.Sun.slot}
-                    onChange={(e) => handleSlotChange("Sun", e.target.value)}
+
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              {/* Days and Slots */}
+              {Object.keys(scheduleData.days).map((day) => (
+                <div key={day} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={day}
+                    className="mr-2"
+                    checked={scheduleData.days[day].selected}
+                    onChange={() => handleDayCheckChange(day)}
+        />
+                  <label className="mr-2" htmlFor={day}>
+                    {day}
+                  </label>
+                  <select
+                    className="border p-1 rounded-lg w-full"
+                    value={scheduleData.days[day].slot}
+                    onChange={(e) => handleSlotChange(day, e.target.value)}
                   >
                     <option>Select slot</option>
                     <option>9 am - 12 pm</option>
                     <option>1 pm - 4 pm</option>
                     <option>5 pm - 8 pm</option>
                   </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
                 </div>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="mon" 
-                  className="mr-2"
-                  checked={scheduleData.days.Mon.selected}
-                  onChange={() => handleDayCheckChange("Mon")}
-                />
-                <label className="mr-2 w-8" htmlFor="mon">Mon</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none"
-                    value={scheduleData.days.Mon.slot}
-                    onChange={(e) => handleSlotChange("Mon", e.target.value)}
-                  >
-                    <option>Select slot</option>
-                    <option>9 am - 12 pm</option>
-                    <option>1 pm - 4 pm</option>
-                    <option>5 pm - 8 pm</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="tue" 
-                  className="mr-2"
-                  checked={scheduleData.days.Tue.selected}
-                  onChange={() => handleDayCheckChange("Tue")}
-                />
-                <label className="mr-2 w-8" htmlFor="tue">Tue</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none"
-                    value={scheduleData.days.Tue.slot}
-                    onChange={(e) => handleSlotChange("Tue", e.target.value)}
-                  >
-                    <option>Select slot</option>
-                    <option>9 am - 12 pm</option>
-                    <option>1 pm - 4 pm</option>
-                    <option>5 pm - 8 pm</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="wed" 
-                  className="mr-2"
-                  checked={scheduleData.days.Wed.selected}
-                  onChange={() => handleDayCheckChange("Wed")}
-                />
-                <label className="mr-2 w-8" htmlFor="wed">Wed</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none"
-                    value={scheduleData.days.Wed.slot}
-                    onChange={(e) => handleSlotChange("Wed", e.target.value)}
-                  >
-                    <option>Select slot</option>
-                    <option>9 am - 12 pm</option>
-                    <option>1 pm - 4 pm</option>
-                    <option>5 pm - 8 pm</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="thu" 
-                  className="mr-2"
-                  checked={scheduleData.days.Thu.selected}
-                  onChange={() => handleDayCheckChange("Thu")}
-                />
-                <label className="mr-2 w-8" htmlFor="thu">Thu</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none"
-                    value={scheduleData.days.Thu.slot}
-                    onChange={(e) => handleSlotChange("Thu", e.target.value)}
-                  >
-                    <option>Select slot</option>
-                    <option>9 am - 12 pm</option>
-                    <option>1 pm - 4 pm</option>
-                    <option>5 pm - 8 pm</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="fri" 
-                  className="mr-2"
-                  checked={scheduleData.days.Fri.selected}
-                  onChange={() => handleDayCheckChange("Fri")}
-                />
-                <label className="mr-2 w-8" htmlFor="fri">Fri</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none"
-                    value={scheduleData.days.Fri.slot}
-                    onChange={(e) => handleSlotChange("Fri", e.target.value)}
-                  >
-                    <option>Select slot</option>
-                    <option>9 am - 12 pm</option>
-                    <option>1 pm - 4 pm</option>
-                    <option>5 pm - 8 pm</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="sat" 
-                  className="mr-2"
-                  checked={scheduleData.days.Sat.selected}
-                  onChange={() => handleDayCheckChange("Sat")}
-                />
-                <label className="mr-2 w-8" htmlFor="sat">Sat</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none"
-                    value={scheduleData.days.Sat.slot}
-                    onChange={(e) => handleSlotChange("Sat", e.target.value)}
-                  >
-                    <option>Select slot</option>
-                    <option>9 am - 12 pm</option>
-                    <option>1 pm - 4 pm</option>
-                    <option>5 pm - 8 pm</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
-            
+
             <div className="mb-4">
-              <p>Conflicting Bookings : 15</p>
+              <p>Conflicting Bookings: 15</p>
             </div>
-            
+
             <div className="mb-4">
-              <label className="block mb-1">Reason for Unavailability :</label>
-              <textarea 
+              <label className="block mb-1">Reason for Unavailability:</label>
+              <textarea
                 className="border p-2 rounded-lg w-full h-20"
                 value={scheduleData.reason}
-                onChange={(e) => setScheduleData({...scheduleData, reason: e.target.value})}
+                onChange={(e) => setScheduleData({ ...scheduleData, reason: e.target.value })}
               ></textarea>
             </div>
-            
-            <div className="flex justify-center">
-              <button 
+
+            <div className="flex justify-center mt-auto">
+              <button
                 className="bg-teal-600 text-white px-6 py-2 rounded-lg"
                 onClick={handleUpdateSchedule}
               >
@@ -444,30 +272,30 @@ const DoctorManagement = () => {
       {/* Add Doctor Modal */}
       {showAddDoctor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 shadow-lg w-[800px] h-[700px] 
-        overflow-y-auto scrollbar-none">
+          <div className="bg-white p-6 shadow-lg w-[500px] h-[720px] overflow-hidden flex flex-col rounded-lg">
             <h2 className="text-xl font-bold mb-4 text-center">Add Doctor</h2>
-            
+
+            {/* Doctor Details */}
             <div className="mb-4">
               <label className="block mb-1">First Name</label>
               <input type="text" className="border p-2 rounded-lg w-full" />
             </div>
-            
+
             <div className="mb-4">
               <label className="block mb-1">Last Name</label>
               <input type="text" className="border p-2 rounded-lg w-full" />
             </div>
-            
+
             <div className="mb-4">
               <label className="block mb-1">Specialization</label>
               <input type="text" className="border p-2 rounded-lg w-full" />
             </div>
-            
+
             <div className="mb-4">
               <label className="block mb-1">Phone</label>
               <input type="text" className="border p-2 rounded-lg w-full" />
             </div>
-            
+
             <div className="mb-4 flex items-center">
               <label className="mr-2">Consultation Fee</label>
               <input type="text" className="border p-2 rounded-lg w-24 mr-2" />
@@ -478,207 +306,38 @@ const DoctorManagement = () => {
                 <option>20</option>
               </select>
             </div>
-            
-          <div className="mb-4">
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="sun" 
-                  className="mr-2"
-                  checked={scheduleData.days.Sun.selected}
-                  onChange={() => handleDayCheckChange("Sun")}
-                />
-                <label className="mr-2 w-8" htmlFor="sun">Sun</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none" 
-                    value={scheduleData.days.Sun.slot}
-                    onChange={(e) => handleSlotChange("Sun", e.target.value)}
+
+            {/* Days and Slots */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              {Object.keys(scheduleData.days).map((day) => (
+                <div key={day} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id={day}
+                    className="mr-2"
+                    checked={scheduleData.days[day].selected}
+                    onChange={() => handleDayCheckChange(day)}
+                  />
+                  <label className="mr-2 w-8" htmlFor={day}>
+                    {day}
+                  </label>
+                  <select
+                    className="border p-1 rounded-lg w-full"
+                    value={scheduleData.days[day].slot}
+                    onChange={(e) => handleSlotChange(day, e.target.value)}
                   >
                     <option>Select slot</option>
                     <option>9 am - 12 pm</option>
                     <option>1 pm - 4 pm</option>
                     <option>5 pm - 8 pm</option>
                   </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
                 </div>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="mon" 
-                  className="mr-2"
-                  checked={scheduleData.days.Mon.selected}
-                  onChange={() => handleDayCheckChange("Mon")}
-                />
-                <label className="mr-2 w-8" htmlFor="mon">Mon</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none"
-                    value={scheduleData.days.Mon.slot}
-                    onChange={(e) => handleSlotChange("Mon", e.target.value)}
-                  >
-                    <option>Select slot</option>
-                    <option>9 am - 12 pm</option>
-                    <option>1 pm - 4 pm</option>
-                    <option>5 pm - 8 pm</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="tue" 
-                  className="mr-2"
-                  checked={scheduleData.days.Tue.selected}
-                  onChange={() => handleDayCheckChange("Tue")}
-                />
-                <label className="mr-2 w-8" htmlFor="tue">Tue</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none"
-                    value={scheduleData.days.Tue.slot}
-                    onChange={(e) => handleSlotChange("Tue", e.target.value)}
-                  >
-                    <option>Select slot</option>
-                    <option>9 am - 12 pm</option>
-                    <option>1 pm - 4 pm</option>
-                    <option>5 pm - 8 pm</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="wed" 
-                  className="mr-2"
-                  checked={scheduleData.days.Wed.selected}
-                  onChange={() => handleDayCheckChange("Wed")}
-                />
-                <label className="mr-2 w-8" htmlFor="wed">Wed</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none"
-                    value={scheduleData.days.Wed.slot}
-                    onChange={(e) => handleSlotChange("Wed", e.target.value)}
-                  >
-                    <option>Select slot</option>
-                    <option>9 am - 12 pm</option>
-                    <option>1 pm - 4 pm</option>
-                    <option>5 pm - 8 pm</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="thu" 
-                  className="mr-2"
-                  checked={scheduleData.days.Thu.selected}
-                  onChange={() => handleDayCheckChange("Thu")}
-                />
-                <label className="mr-2 w-8" htmlFor="thu">Thu</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none"
-                    value={scheduleData.days.Thu.slot}
-                    onChange={(e) => handleSlotChange("Thu", e.target.value)}
-                  >
-                    <option>Select slot</option>
-                    <option>9 am - 12 pm</option>
-                    <option>1 pm - 4 pm</option>
-                    <option>5 pm - 8 pm</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="fri" 
-                  className="mr-2"
-                  checked={scheduleData.days.Fri.selected}
-                  onChange={() => handleDayCheckChange("Fri")}
-                />
-                <label className="mr-2 w-8" htmlFor="fri">Fri</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none"
-                    value={scheduleData.days.Fri.slot}
-                    onChange={(e) => handleSlotChange("Fri", e.target.value)}
-                  >
-                    <option>Select slot</option>
-                    <option>9 am - 12 pm</option>
-                    <option>1 pm - 4 pm</option>
-                    <option>5 pm - 8 pm</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center mb-2">
-                <input 
-                  type="checkbox" 
-                  id="sat" 
-                  className="mr-2"
-                  checked={scheduleData.days.Sat.selected}
-                  onChange={() => handleDayCheckChange("Sat")}
-                />
-                <label className="mr-2 w-8" htmlFor="sat">Sat</label>
-                <div className="relative w-full">
-                  <select 
-                    className="border p-1 rounded-lg w-full appearance-none"
-                    value={scheduleData.days.Sat.slot}
-                    onChange={(e) => handleSlotChange("Sat", e.target.value)}
-                  >
-                    <option>Select slot</option>
-                    <option>9 am - 12 pm</option>
-                    <option>1 pm - 4 pm</option>
-                    <option>5 pm - 8 pm</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
-            
-            <div className="flex justify-center">
-              <button 
+
+            {/* Submit Button */}
+            <div className="flex justify-center mt-auto">
+              <button
                 className="bg-teal-600 text-white px-6 py-2 rounded-lg"
                 onClick={() => setShowAddDoctor(false)}
               >
